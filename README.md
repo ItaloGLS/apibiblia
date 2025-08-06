@@ -134,7 +134,7 @@ data class BibleResponse(
     val translation_name: String // Nome da tradução
 )
 ```
-##✅ Exemplo de uso
+## ✅ Exemplo de uso
 
 Se o usuário digitar:
 
