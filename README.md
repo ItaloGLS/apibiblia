@@ -1,9 +1,9 @@
-# 📱 IBGE Nomes App
+# 📖 App Busca Bíblica
 
-Este app Android consulta a frequência de nomes próprios no Brasil usando a [API de nomes do IBGE](https://servicodados.ibge.gov.br/api/docs/nomes).  
-Ele retorna a frequência do nome digitado por década de nascimento.
+Este é um aplicativo Android que permite ao usuário pesquisar versículos bíblicos, digitando o livro, capítulo e versículo.  
+Ele utiliza a [Bible API](https://bible-api.com/) para retornar o texto da Bíblia.
 
-Construído com **Kotlin** + **Retrofit**.
+> O app aceita nomes de livros digitados em **português** (ex: “joão”, “salmos”) e converte automaticamente para o formato exigido pela API (em inglês, sem acento).
 
 ---
 
@@ -12,83 +12,91 @@ Construído com **Kotlin** + **Retrofit**.
 ### ✅ `MainActivity.kt`
 
 ```kotlin
-package com.example.ibgenomesapp
+package com.example.buscabiblica
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.Normalizer
 
 class MainActivity : AppCompatActivity() {
 
-    // Elementos da interface
-    lateinit var editNome: EditText
+    // Referências aos componentes da interface
+    lateinit var editLivro: EditText
+    lateinit var editCapitulo: EditText
+    lateinit var editVersiculo: EditText
     lateinit var btnBuscar: Button
     lateinit var textResultado: TextView
+
+    // Mapa de tradução de livros da Bíblia (português → inglês)
+    private val mapaLivros = mapOf(
+        "genesis" to "genesis",
+        "exodo" to "exodus",
+        "levitico" to "leviticus",
+        ...
+        "apocalipse" to "revelation"
+    )
+
+    // Função de extensão que normaliza o texto: remove acentos e espaços
+    private fun String.normalizeText(): String {
+        val normalized = Normalizer.normalize(this, Normalizer.Form.NFD)
+        return Regex("\\p{InCombiningDiacriticalMarks}+").replace(normalized, "").lowercase().trim()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Ligando os componentes da tela
-        editNome = findViewById(R.id.editNome)
+        // Ligando os componentes do layout
+        editLivro = findViewById(R.id.editLivro)
+        editCapitulo = findViewById(R.id.editCapitulo)
+        editVersiculo = findViewById(R.id.editVersiculo)
         btnBuscar = findViewById(R.id.btnBuscar)
         textResultado = findViewById(R.id.textResultado)
 
-        // Criando o Retrofit (cliente HTTP)
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://servicodados.ibge.gov.br/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        // Criando a instância da interface da API
-        val api = retrofit.create(IbgeApi::class.java)
-
-        // Ação ao clicar no botão
         btnBuscar.setOnClickListener {
-            val nome = editNome.text.toString().trim().lowercase()
+            val livroDigitado = editLivro.text.toString().normalizeText()
+            val capitulo = editCapitulo.text.toString().toIntOrNull()
+            val versiculo = editVersiculo.text.toString().toIntOrNull()
 
-            if (nome.isBlank()) {
-                textResultado.text = "Por favor, digite um nome."
+            if (livroDigitado.isBlank() || capitulo == null || versiculo == null) {
+                textResultado.text = "Preencha todos os campos corretamente."
                 return@setOnClickListener
             }
 
-            val call = api.getNameInfo(nome)
+            // Traduz o nome do livro, se existir no mapa
+            val livroApi = mapaLivros[livroDigitado] ?: livroDigitado
 
-            // Fazendo a requisição
-            call.enqueue(object : Callback<List<IbgeResponse>> {
+            // Configura o Retrofit para chamada HTTP
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://bible-api.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            val api = retrofit.create(BibleApi::class.java)
+
+            // Faz a requisição com Retrofit
+            val call = api.getVersiculo(livroApi, capitulo, versiculo)
+            call.enqueue(object : Callback<BibleResponse> {
                 override fun onResponse(
-                    call: Call<List<IbgeResponse>>,
-                    response: Response<List<IbgeResponse>>
+                    call: Call<BibleResponse>,
+                    response: Response<BibleResponse>
                 ) {
                     if (response.isSuccessful) {
-                        val lista = response.body()
-                        if (lista != null && lista.isNotEmpty()) {
-                            val info = lista[0]
-                            val sb = StringBuilder()
-                            sb.append("Nome: ${info.nome.uppercase()}\n\n")
-                            sb.append("Frequência por década:\n")
-
-                            val resList = info.res
-                            if (resList.isNullOrEmpty()) {
-                                sb.append("Sem dados de frequências disponíveis.")
-                            } else {
-                                resList.forEach {
-                                    sb.append("${it.periodo}: ${it.frequencia}\n")
-                                }
-                            }
-
-                            textResultado.text = sb.toString()
+                        val versiculo = response.body()
+                        if (versiculo != null && versiculo.text.isNotEmpty()) {
+                            textResultado.text = "${versiculo.reference}\n\n${versiculo.text}"
                         } else {
-                            textResultado.text = "Nome não encontrado."
+                            textResultado.text = "Versículo não encontrado!"
                         }
                     } else {
-                        textResultado.text = "Erro na resposta da API."
+                        textResultado.text = "Versículo não encontrado!"
                     }
                 }
 
-                override fun onFailure(call: Call<List<IbgeResponse>>, t: Throwable) {
+                override fun onFailure(call: Call<BibleResponse>, t: Throwable) {
                     textResultado.text = "Erro na conexão: ${t.message}"
                 }
             })
@@ -99,49 +107,58 @@ class MainActivity : AppCompatActivity() {
 
 ### ✅ `IbgeApi.kt`
 ```kotlin
-package com.example.ibgenomesapp
+package com.example.buscabiblica
 
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-// Interface usada pelo Retrofit para acessar a API do IBGE
-interface IbgeApi {
-    @GET("v2/censos/nomes/{nome}")
-    fun getNameInfo(@Path("nome") nome: String): Call<List<IbgeResponse>>
+// Interface Retrofit para acessar a Bible API
+interface BibleApi {
+    @GET("{livro}%20{capitulo}:{versiculo}")
+    fun getVersiculo(
+        @Path("livro") livro: String,
+        @Path("capitulo") capitulo: Int,
+        @Path("versiculo") versiculo: Int
+    ): Call<BibleResponse>
 }
 ```
 ### ✅ `BibleResponse.kt`
 ```kotlin
 package com.example.buscabiblica
 
+// Modelo de dados da resposta da Bible API
 data class BibleResponse(
-    val reference: String,
-    val text: String,
-    val translation_name: String
+    val reference: String,        // Ex: "John 3:16"
+    val text: String,             // Texto do versículo
+    val translation_name: String // Nome da tradução
 )
 ```
+##✅ Exemplo de uso
+
+Se o usuário digitar:
+
+    Livro: João
+
+    Capítulo: 3
+
+    Versículo: 16
+
+O app faz a busca para https://bible-api.com/john%203:16 e retorna:
+
+John 3:16
+
+For God so loved the world that he gave his one and only Son, 
+that whoever believes in him shall not perish but have eternal life.
 
 ℹ️ Observações
 
-    O campo "frequência" indica quantas pessoas receberam aquele nome naquela década.
+    O app aceita nomes em português com acento, mas usa um sistema de normalização e tradução para converter o nome corretamente.
 
-    A API retorna os dados a partir do Censo Nacional, ou seja, dados reais e atualizados pelo IBGE.
+    O campo text pode vir em inglês (a API atualmente só oferece esse idioma).
 
-    A pesquisa diferencia maiúsculas/minúsculas, então usamos lowercase() para garantir o funcionamento.
+    A API usada é gratuita e pública: https://bible-api.com
 
-## ✅ Exemplo de uso
-
-Se você digitar maria, o app pode exibir algo como:
-
-Nome: MARIA
-
-Frequência por década:
-[1930,1940[: 749053
-[1940,1950[: 1487042
-[1950,1960[: 2476482
-[1960,1970[: 2495491
-[1970,1980[: 1616019
 ...
 
 
